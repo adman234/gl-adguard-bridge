@@ -6,7 +6,7 @@ import uvicorn
 from loguru import logger
 from starlette.applications import Starlette
 from starlette.requests import Request
-from starlette.responses import Response
+from starlette.responses import JSONResponse, Response
 from starlette.routing import Route
 
 from gl_adguard_bridge.auth import RouterAuth
@@ -43,6 +43,7 @@ class Server:
         self.app = Starlette(
             debug=self.settings.log_level == "DEBUG",
             routes=[
+                Route("/healthz", self.health, methods=["GET"]),
                 Route(
                     "/{path:path}",
                     self.handle_request,
@@ -92,6 +93,14 @@ class Server:
             Response: The response from AdGuard Home
         """
         return await self.proxy.handle_request(request)
+
+    async def health(self, request: Request) -> Response:
+        """Liveness check for the bridge process itself.
+
+        Deliberately does not touch the router or AdGuard Home, so it reflects
+        whether this process is up rather than the health of upstream services.
+        """
+        return JSONResponse({"status": "ok"})
 
     def run(self):
         """Run the server."""
