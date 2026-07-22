@@ -40,11 +40,15 @@ class Settings(BaseModel):
         "root", description="Username for GL.iNet router authentication (usually 'root')"
     )
     router_password: str = Field(..., description="Password for GL.iNet router authentication")
+    router_use_https: bool = Field(
+        True,
+        description="Whether to connect to the router's RPC endpoint over HTTPS",
+    )
     router_ssl_verify: Union[bool, str] = Field(
         True,
         description=(
             "Whether to verify SSL certificates for router connections "
-            "(True, False, or path to CA bundle)"
+            "(True, False, or path to CA bundle). Only relevant when router_use_https is True."
         ),
     )
 
@@ -66,8 +70,7 @@ class Settings(BaseModel):
         https://web.archive.org/web/20240121142533/https://dev.gl-inet.com/router-4.x-api/
         The HTTP request path for all APIs is /rpc
         """
-        # Use https:// if SSL verification is enabled, otherwise use http://
-        protocol = "https" if self.router_ssl_verify else "http"
+        protocol = "https" if self.router_use_https else "http"
         return f"{protocol}://{self.router_host}/rpc"
 
 
@@ -101,6 +104,7 @@ def get_settings() -> Settings:
         router_host=os.environ["ROUTER_HOST"],
         router_username=os.environ.get("ROUTER_USERNAME", "root"),
         router_password=os.environ["ROUTER_PASSWORD"],
+        router_use_https=_strtobool(os.environ.get("ROUTER_USE_HTTPS", "true")),
         router_ssl_verify=_parse_ssl_verify(os.environ.get("ROUTER_SSL_VERIFY")),
         adguard_url=os.environ["ADGUARD_URL"],
         host=os.environ.get("HOST", "0.0.0.0"),
