@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>gl-adguard-bridge</Name>
+  <Repository>ghcr.io/adman234/gl-adguard-bridge:latest</Repository>
+  <Registry>https://github.com/adman234/gl-adguard-bridge/pkgs/container/gl-adguard-bridge</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/adman234/gl-adguard-bridge/issues</Support>
+  <Project>https://github.com/adman234/gl-adguard-bridge</Project>
+  <Overview>HTTP proxy that lets Home Assistant talk to an AdGuard Home instance sitting behind a GL.iNet router's authenticated admin API. It authenticates to the router, attaches the resulting session cookie, and forwards AdGuard Home API calls, reauthenticating automatically when the session expires.&#13;&#10;&#13;&#10;SECURITY: this container has no authentication of its own. Anyone who can reach its port gets authenticated AdGuard Home access. Do not publish this port beyond your LAN, and do not put it on a network shared with untrusted devices.</Overview>
+  <Category>Network:Other Tools:</Category>
+  <WebUI/>
+  <TemplateURL/>
+  <Icon/>
+  <ExtraParams/>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled/>
+  <DonateText/>
+  <DonateLink/>
+  <Description>HTTP proxy server to support Home Assistant integration with AdGuard Home behind GL.iNet routers requiring authentication.</Description>
+  <Networking>
+    <Mode>bridge</Mode>
+    <Publish>
+      <Port>
+        <HostPort>8000</HostPort>
+        <ContainerPort>8000</ContainerPort>
+        <Protocol>tcp</Protocol>
+      </Port>
+    </Publish>
+  </Networking>
+  <Data/>
+  <Environment/>
+  <Labels/>
+  <Config Name="WebUI Port" Target="8000" Default="8000" Mode="tcp" Description="Port the bridge listens on and that Home Assistant should point at" Type="Port" Display="always" Required="true" Mask="false">8000</Config>
+  <Config Name="Router Host" Target="ROUTER_HOST" Default="" Mode="" Description="Hostname or IP address of the GL.iNet router, e.g. 192.168.8.1" Type="Variable" Display="always" Required="true" Mask="false"></Config>
+  <Config Name="Router Username" Target="ROUTER_USERNAME" Default="root" Mode="" Description="Username for GL.iNet router authentication" Type="Variable" Display="always" Required="false" Mask="false">root</Config>
+  <Config Name="Router Password" Target="ROUTER_PASSWORD" Default="" Mode="" Description="Password for GL.iNet router authentication" Type="Variable" Display="always" Required="true" Mask="true"></Config>
+  <Config Name="AdGuard URL" Target="ADGUARD_URL" Default="" Mode="" Description="URL of the real AdGuard Home instance, e.g. http://192.168.8.2:3000" Type="Variable" Display="always" Required="true" Mask="false"></Config>
+  <Config Name="Router Use HTTPS" Target="ROUTER_USE_HTTPS" Default="true" Mode="" Description="Connect to the router's RPC endpoint over HTTPS (true/false)" Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
+  <Config Name="Router SSL Verify" Target="ROUTER_SSL_VERIFY" Default="true" Mode="" Description="Verify the router's TLS certificate: true, false, or a path to a CA bundle inside the container. Only applies when Router Use HTTPS is true." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
+  <Config Name="Log Level" Target="LOG_LEVEL" Default="INFO" Mode="" Description="Logging verbosity: DEBUG, INFO, WARNING, ERROR" Type="Variable" Display="advanced" Required="false" Mask="false">INFO</Config>
+</Container>
